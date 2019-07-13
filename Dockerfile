@@ -1,25 +1,10 @@
-#Grab the latest alpine image
-FROM alpine:latest
-
-# Install python and pip
-RUN apk add --no-cache --update python3 py3-pip bash
-ADD ./webapp/requirements.txt /tmp/requirements.txt
-
-# Install dependencies
-RUN pip3 install --no-cache-dir -q -r /tmp/requirements.txt
-
-# Add our code
-ADD ./webapp /opt/webapp/
-WORKDIR /opt/webapp
-
-# Expose is NOT supported by Heroku
-# EXPOSE 5000 		
-
-# Run the image as a non-root user
-RUN adduser -D myuser
-USER myuser
-
-# Run the app.  CMD is required to run on Heroku
-# $PORT is set by Heroku			
-CMD gunicorn --bind 0.0.0.0:$PORT wsgi 
-
+FROM php:7.1.5-apache
+RUN apt-get update && apt-get install -yq git && rm -rf /var/lib/apt/lists/*
+ENV APP_HOME /var/www/html
+RUN usermod -u 1000 www-data && groupmod -g 1000 www-data
+RUN sed -i -e "s/html/html\/public/g" /etc/apache2/sites-enabled/000-default.conf
+RUN a2enmod rewrite
+COPY . $APP_HOME
+RUN chown -R www-data:www-data $APP_HOME
+ENTRYPOINT []
+CMD sed -i "s/80/$PORT/g" /etc/apache2/sites-enabled/000-default.conf /etc/apache2/ports.conf && docker-php-entrypoint apache2-foreground
