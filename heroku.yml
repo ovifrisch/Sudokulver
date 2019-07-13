@@ -2,7 +2,5 @@ build:
   docker:
     web:
      dockerfile: Dockerfile
-     context: .
     worker:
      dockerfile: worker/Dockerfile
-     context: .
