@@ -1,5 +1,5 @@
-#include "opencv/cv.hpp"
-#include "opencv/ml.h"
+#include "opencv2/opencv.hpp"
+#include "opencv2/ml.hpp"
 #include <string>
 #include <vector>
 #include <iostream>
@@ -371,7 +371,7 @@ int main() {
 	string im_name = "uploads/im.jpeg";
 	Mat big_color_image = imread(im_name, IMREAD_COLOR);
 	color_image = resize_im(big_color_image);
-	cvtColor(color_image, gray_image, CV_BGR2GRAY);
+	cvtColor(color_image, gray_image, COLOR_BGR2GRAY);
 	extract_grid();
 	vector<Vec2f> detected_horizontals, detected_verticals;
 	detect_lines(detected_horizontals, detected_verticals);
@@ -388,3 +388,4 @@ int main() {
 	detect_digits(squares, labels);
 	pretty_print(labels);
 }
+
